@@ -3,7 +3,8 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 
 export const add = createAction("items/add");
 export const remove = createAction("items/remove");
-export const filter = createAction("element/filter");
+export const filter = createAction("items/filter");
+export const saved = createAction("items/saved");
 
 const myReducer = createReducer(
   [
@@ -13,18 +14,20 @@ const myReducer = createReducer(
     { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
   ],
   {
+    [saved]: (state, action) => action.payload,
     [add]: (state, action) => [...state, action.payload],
     [remove]: (state, action) =>
       state.filter((item) => item.id !== action.payload),
-    [filter]: (state, action) =>
-      state.filter((filter) =>
-        filter.name.toLowerCase().includes(action.payload)
-      ),
   }
 );
+
+const filterReducer = createReducer("", {
+  [filter]: (state, action) => action.payload,
+});
 
 export const store = configureStore({
   reducer: {
     myContacts: myReducer,
+    myFilteredContacts: filterReducer,
   },
 });
